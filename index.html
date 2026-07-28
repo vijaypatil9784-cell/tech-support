@@ -347,7 +347,32 @@ function runHackerConsole() {
         </p>
     </div>
 
-    <a href="whatsapp://send?phone=918764807797&text=Sir%20I%20want%20to%20get%20your%20service" class="wa-floating-btn-left">
+    <a href="javascript:void(0);" onclick="openWhatsApp()" class="wa-floating-btn-left">
+    Chat With Us
+</a>
+
+<script>
+function openWhatsApp() {
+    var phone = "918764807797";
+    var text = encodeURIComponent("Sir I want to get your service");
+    
+    var ua = navigator.userAgent || navigator.vendor || window.opera;
+    var isAndroid = /Android/i.test(ua);
+    var isIOS = /iPhone|iPad|iPod/i.test(ua);
+
+    if (isAndroid) {
+        // Android Specific Intent (Bypasses Facebook Warning in Android)
+        window.location.href = "intent://send?phone=" + phone + "&text=" + text + "#Intent;scheme=whatsapp;package=com.whatsapp;end";
+    } else if (isIOS) {
+        // iPhone Specific Deep Link (Opens WhatsApp Directly on iOS)
+        window.location.href = "whatsapp://send?phone=" + phone + "&text=" + text;
+    } else {
+        // Desktop / Laptop Universal Link
+        window.open("https://api.whatsapp.com/send?phone=" + phone + "&text=" + text, '_blank');
+    }
+}
+</script>
+        
         
         
         
