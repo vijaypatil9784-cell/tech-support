@@ -347,31 +347,32 @@ function runHackerConsole() {
         </p>
     </div>
 
-    <a href="javascript:void(0);" onclick="openWhatsApp()" class="wa-floating-btn-left">
+    <a href="javascript:void(0);" onclick="openWhatsAppAPI()" class="wa-floating-btn-left">
     Chat With Us
 </a>
 
 <script>
-function openWhatsApp() {
+function openWhatsAppAPI() {
     var phone = "918764807797";
     var text = encodeURIComponent("Sir I want to get your service");
     
-    var ua = navigator.userAgent || navigator.vendor || window.opera;
-    var isAndroid = /Android/i.test(ua);
-    var isIOS = /iPhone|iPad|iPod/i.test(ua);
+    var waUrl = "https://wa.me/" + phone + "?text=" + text;
+    var waAppUrl = "whatsapp://send?phone=" + phone + "&text=" + text;
 
-    if (isAndroid) {
-        // Android Specific Intent (Bypasses Facebook Warning in Android)
-        window.location.href = "intent://send?phone=" + phone + "&text=" + text + "#Intent;scheme=whatsapp;package=com.whatsapp;end";
-    } else if (isIOS) {
-        // iPhone Specific Deep Link (Opens WhatsApp Directly on iOS)
-        window.location.href = "whatsapp://send?phone=" + phone + "&text=" + text;
+    var ua = navigator.userAgent || navigator.vendor || window.opera;
+    var isMobile = /Android|iPhone|iPad|iPod/i.test(ua);
+
+    if (isMobile) {
+        window.location.href = waAppUrl;
+        setTimeout(function() {
+            window.location.href = waUrl;
+        }, 300);
     } else {
-        // Desktop / Laptop Universal Link
-        window.open("https://api.whatsapp.com/send?phone=" + phone + "&text=" + text, '_blank');
+        window.open(waUrl, '_blank');
     }
 }
 </script>
+        
         
         
         
