@@ -68,7 +68,11 @@
         .trust-popup { position: fixed; bottom: 20px; left: -350px; width: 300px; background: rgba(5, 12, 20, 0.95); border: 1px solid var(--neon-blue); color: #fff; padding: 15px; display: flex; align-items: center; gap: 12px; border-radius: 4px; z-index: 9999; box-shadow: 0 0 15px rgba(0, 242, 255, 0.3); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .trust-popup.active { left: 20px; }
         
-        /* Merged Legal Footer Style */
+        /* Direct WhatsApp Floating Button */
+        .wa-floating-btn { position: fixed; bottom: 25px; right: 25px; background-color: #25d366; color: #fff; width: 60px; height: 60px; border-radius: 50px; text-align: center; font-size: 30px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); z-index: 9999; display: flex; justify-content: center; align-items: center; text-decoration: none; transition: transform 0.3s; }
+        .wa-floating-btn:hover { transform: scale(1.1); color: #fff; }
+
+        /* Legal Footer Style */
         .meta-footer { background: #010306; padding: 40px 20px; border-top: 1px solid var(--border); text-align: center; font-size: 0.8rem; color: #666; margin-top: 40px; }
         .meta-footer b { color: var(--neon-blue); }
     </style>
@@ -86,6 +90,10 @@
     </script>
 </head>
 <body onclick="activateVoice()">
+
+<a href="https://api.whatsapp.com/send?phone=918764807797&text=Sir%20I%20want%20to%20get%20your%20service" target="_blank" class="wa-floating-btn" onclick="if(typeof fbq === 'function') fbq('track', 'Contact');">
+    <i class="fab fa-whatsapp"></i>
+</a>
 
 <canvas id="canvas"></canvas>
 
@@ -342,7 +350,6 @@ function runHackerConsole() {
     const wa = document.getElementById('userWhatsApp').value;
     if(!wa) return alert("Please enter WhatsApp number!");
     
-    // Telegram Alert for User WhatsApp Number
     fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
